@@ -32,7 +32,7 @@ jobs:
 
           # [Mandatory if JF_ACCESS_TOKEN is not provided]
           # JFrog password. Must be provided with JF_USER
-          # JF_PASSWORD: ${{ secrets.JF_PASSWORD }}
+          JF_PASSWORD: ${{ secrets.JF_PASSWORD }}
 
           # [Mandatory]
           # The GitHub token is automatically generated for the job
