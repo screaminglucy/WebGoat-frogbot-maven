@@ -60,7 +60,7 @@ jobs:
           #    Under the 'Advanced' tab:
           #       Uncheck the 'Store Artifacts Locally' option
           # 3. Set the value of the 'JF_RELEASES_REPO' variable with the Repository Key you created.
-          # JF_RELEASES_REPO: ""
+          JF_RELEASES_REPO: "weili-frogbot-local"
 
           ##########################################################################
           ##   If your project uses a 'frogbot-config.yml' file, you can define   ##
