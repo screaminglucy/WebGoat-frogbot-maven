@@ -18,8 +18,9 @@ jobs:
         # The repository scanning will be triggered periodically on the following branches.
         branch: ["main"]
     steps:
-      - uses: jfrog/frogbot@v2.21.0
+      - uses: jfrog/frogbot@v2
         env:
+          JFROG_CLI_LOG_LEVEL: "DEBUG"
           # [Mandatory]
           # JFrog platform URL
           JF_URL: ${{ secrets.JF_URL }}
