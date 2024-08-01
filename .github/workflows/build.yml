@@ -1,0 +1,49 @@
+name: 'maven-webgoat'
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    types: 
+      - closed
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+ npm-build-and-publish:
+   runs-on: ubuntu-latest
+   env:
+     BUILD_NAME: 'maven-webgoat'
+     JFROG_BUILD_STATUS: PASS
+   steps:
+     - name: Checkout
+       uses: actions/checkout@v4
+     - name: JFrog CLI setup 🐸
+       uses: jfrog/setup-jfrog-cli@v4
+       env:
+        JF_URL: ${{ secrets.JF_URL }}
+        JF_ACCESS_TOKEN: ${{secrets.JF_ACCESS_TOKEN}}
+        JF_GIT_TOKEN: ${{ secrets.JF_GIT_TOKEN }}
+     - name: Health check JFrog Artifactory instance 🐸
+       run: |
+        jf --version
+        jf rt ping
+        # jf config show
+     - name: Build Maven Package
+       run: |
+         jf mvnc --repo-resolve-releases alpha-mvn-virtual --repo-resolve-snapshots alpha-mvn-virtual --repo-deploy-releases alpha-mvn-virtual --repo-deploy-snapshots alpha-mvn-virtual
+         jf mvn clean install -f pom.xml -Dmaven.test.skip=true -Dartifactory.publish.artifacts=true --build-name ${{env.BUILD_NAME}} --build-number ${{github.run_number}}
+     - name: Audit
+       run: |
+         jf audit
+     - name: Publish build build-info
+       run: |
+         # Collect and store environment variables in the build-info
+         jf rt bce ${{env.BUILD_NAME}} ${{github.run_number}}
+         # Collect and store VCS details in the build-info
+         jf rt bag ${{env.BUILD_NAME}} ${{github.run_number}}
+         # Publish the build-info to Artifactory
+         jf rt bp ${{env.BUILD_NAME}} ${{github.run_number}}
+         # Scan the published build-info with Xray
+         jf rt bs ${{env.BUILD_NAME}} ${{github.run_number}}
