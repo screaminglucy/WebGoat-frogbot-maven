@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 jobs:
- npm-build-and-publish:
+ mvn-build-and-publish:
    runs-on: ubuntu-latest
    env:
      BUILD_NAME: 'maven-webgoat'
