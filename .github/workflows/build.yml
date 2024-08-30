@@ -32,18 +32,9 @@ jobs:
         # jf config show
      - name: Build Maven Package
        run: |
-         jf mvnc --repo-resolve-releases alpha-mvn-virtual --repo-resolve-snapshots alpha-mvn-virtual --repo-deploy-releases alpha-mvn-virtual --repo-deploy-snapshots alpha-mvn-virtual
+         jf mvnc --repo-resolve-releases falcon2-maven-dev-virtual --repo-resolve-snapshots falcon2-maven-dev-virtual --repo-deploy-releases falcon2-maven-dev-virtual --repo-deploy-snapshots falcon2-maven-dev-virtual
          jf mvn clean install -f pom.xml -Dmaven.test.skip=true -Dartifactory.publish.artifacts=true --build-name ${{env.BUILD_NAME}} --build-number ${{github.run_number}}
-     - name: Login to JFrog Docker repo
-       uses: docker/login-action@v3
-       with:
-          registry: ${{ secrets.JF_URL }}
-          JF_ACCESS_TOKEN: ${{secrets.JF_ACCESS_TOKEN}}
-     - name: Docker Build 🐳🐸 and scan
-       run: |
-         jf docker build . -t soleng.jfrog.io/alpha-mvn-virtual/webgoat-maven:${{github.run_number}}
-         jf docker scan soleng.jfrog.io/alpha-mvn-virtual/webgoat-maven:${{github.run_number}}
-         jf docker push soleng.jfrog.io/alpha-mvn-virtual/webgoat-maven:${{github.run_number}}
+
      - name: Audit
        run: |
          jf audit
